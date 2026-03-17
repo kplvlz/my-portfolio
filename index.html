@@ -197,7 +197,7 @@
       gap: 12px;
       opacity: 0;
       transform: translateY(30px);
-      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+      transition: opacity 0.5s ease, transform 0.5s ease;
     }
 
     .card.visible {
@@ -205,8 +205,9 @@
       transform: translateY(0);
     }
 
-    .card:hover {
+.card:hover {
       transform: translateY(-8px);
+      transition: opacity 0.5s ease, transform 0.28s ease;
     }
 
     .card-image {
@@ -671,8 +672,11 @@
     var observer = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
         if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
+          var card = entry.target;
+          card.classList.add('visible');
+          var delay = parseFloat(card.style.transitionDelay) || 0;
+          setTimeout(function() { card.style.transitionDelay = '0ms'; }, delay + 500);
+          observer.unobserve(card);
         }
       });
     }, { threshold: 0.15, rootMargin: '-53px 0px 0px 0px' });
@@ -713,6 +717,37 @@
       burgerBtn.setAttribute('aria-expanded', String(isOpen));
       document.body.style.overflow = isOpen ? 'hidden' : '';
     });
+
+    // плавный скролл колесом мыши (только десктоп)
+    if (!('ontouchstart' in window)) {
+      var wheelTargetY = window.scrollY;
+      var wheelCurrentY = window.scrollY;
+      var wheelRaf = null;
+
+      function wheelTick() {
+        wheelCurrentY += (wheelTargetY - wheelCurrentY) * 0.09;
+        window.scrollTo(0, wheelCurrentY);
+        if (Math.abs(wheelTargetY - wheelCurrentY) > 0.5) {
+          wheelRaf = requestAnimationFrame(wheelTick);
+        } else {
+          window.scrollTo(0, wheelTargetY);
+          wheelRaf = null;
+        }
+      }
+
+      window.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        var delta = e.deltaMode === 1 ? e.deltaY * 24 : e.deltaY;
+        wheelTargetY = Math.max(0, Math.min(
+          wheelTargetY + delta,
+          document.documentElement.scrollHeight - window.innerHeight
+        ));
+        if (!wheelRaf) {
+          wheelCurrentY = window.scrollY;
+          wheelRaf = requestAnimationFrame(wheelTick);
+        }
+      }, { passive: false });
+    }
   </script>
 </body>
 </html>
