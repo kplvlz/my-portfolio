@@ -177,9 +177,9 @@
       }
     }
 
-    /* ── about ── */
+    /* ── section headings ── */
 
-    #about h2 {
+    #about h2, #portfolio h2, #services h2, #contacts h2 {
       font-size: 13px;
       font-weight: 400;
       letter-spacing: 0.1em;
@@ -195,14 +195,6 @@
     }
 
     /* ── portfolio ── */
-
-    #portfolio h2 {
-      font-size: 13px;
-      font-weight: 400;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 40px;
-    }
 
     .portfolio-grid {
       display: grid;
@@ -224,7 +216,7 @@
       transform: translateY(0);
     }
 
-.card:hover {
+    .card:hover {
       transform: translateY(-8px);
       transition: opacity 0.5s ease, transform 0.28s ease;
     }
@@ -233,6 +225,19 @@
       width: 100%;
       aspect-ratio: 4 / 3;
       background-color: #b0b0b0;
+      overflow: hidden;
+    }
+
+    .card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .card:hover .card-image img {
+      transform: scale(1.04);
     }
 
     .card-title {
@@ -256,14 +261,6 @@
     }
 
     /* ── services ── */
-
-    #services h2 {
-      font-size: 13px;
-      font-weight: 400;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 40px;
-    }
 
     .services-list {
       list-style: none;
@@ -413,14 +410,6 @@
     }
 
     /* ── contacts ── */
-
-    #contacts h2 {
-      font-size: 13px;
-      font-weight: 400;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 40px;
-    }
 
     .contacts-list {
       list-style: none;
@@ -696,7 +685,7 @@
           </article>
 
           <article class="card">
-            <a href="project-oh-keramika/"><div class="card-image"></div></a>
+            <a href="project-oh-keramika/"><div class="card-image"><img src="images/card-oh-keramika.png" alt="ох! керамика"></div></a>
             <a href="project-oh-keramika/" class="card-title">ох! керамика</a>
             <p class="card-desc">интернет-магазин на платформе Tilda для бренда керамики ручной работы</p>
             <a href="project-oh-keramika/" class="card-more">подробнее <span class="card-arrow">→</span></a>
@@ -847,7 +836,7 @@
     burgerBtn.addEventListener('click', function() {
       var isOpen = mobileMenu.classList.toggle('open');
       burgerBtn.classList.toggle('open', isOpen);
-      burgerBtn.setAttribute('aria-expanded', String(isOpen));
+      burgerBtn.setAttribute('aria-expanded', isOpen);
       document.body.style.overflow = isOpen ? 'hidden' : '';
     });
 
@@ -888,26 +877,12 @@
     });
   });
 
-  // фон: код сайта + отталкивание от курсора
+  // фон: код сайта
   (function() {
-    var canvas = document.getElementById('hero-canvas');
-    var hero   = document.getElementById('hero');
-    var ctx    = canvas.getContext('2d');
-    var FS = 11, LH = 20;
-    var CW, rows2d = [], rowStrs = [];
-    var mouseX = -9999, mouseY = -9999;
-    var R = 60, K = 5.5, SP = 0.07, DM = 0.70;
-    var safeZone = { x: 0, y: 0, w: 0, h: 0 };
-
-    function updateSafeZone() {
-      var cr = canvas.getBoundingClientRect();
-      var ir = hero.querySelector('.hero-inner').getBoundingClientRect();
-      var pad = 80;
-      safeZone.x = ir.left - cr.left - pad;
-      safeZone.y = ir.top  - cr.top  - pad;
-      safeZone.w = ir.width  + pad * 2;
-      safeZone.h = ir.height + pad * 2;
-    }
+    var canvas   = document.getElementById('hero-canvas');
+    var hero     = document.getElementById('hero');
+    var ctx      = canvas.getContext('2d');
+    var isMobile = window.innerWidth <= 1024;
 
     var codeLines = [
       "body { font-family: 'Geist Mono', monospace; background-color: #F5EBE1; color: #4D4D4D; }",
@@ -927,98 +902,200 @@
       ".service-name { font-size: 22px; font-weight: 500; letter-spacing: -0.01em; }",
     ];
 
-    function build() {
-      rows2d = []; rowStrs = [];
-      ctx.font = FS + 'px "Geist Mono", monospace';
-      CW = ctx.measureText('x').width;
-      var cols = Math.ceil(canvas.width / CW) + 2;
-      var numRows = Math.floor(canvas.height / LH);
-      for (var r = 0; r < numRows; r++) {
-        var src = codeLines[r % codeLines.length] + '   ';
-        var str = '';
-        while (str.length < cols) str += src;
-        str = str.slice(0, cols);
-        rowStrs.push(str);
-        var row = [];
-        for (var c = 0; c < cols; c++) {
-          row.push({ ch: str[c], bx: c * CW, by: r * LH + LH, x: c * CW, y: r * LH + LH, vx: 0, vy: 0 });
+    if (isMobile) {
+      // ── бегущая строка по всему фону (мобильный / планшет) ──
+      var FS = 11, LH = 20;
+      var CW, rowStrs = [];
+      var speed = 25; // px/сек — медленно
+      var offset = 0, lastTs = null;
+      var safeZone = { x: 0, y: 0, w: 0, h: 0 };
+
+      function updateSafeZone() {
+        var cr = canvas.getBoundingClientRect();
+        var ir = hero.querySelector('.hero-inner').getBoundingClientRect();
+        var pad = 40;
+        safeZone.x = ir.left - cr.left - pad;
+        safeZone.y = ir.top  - cr.top  - pad;
+        safeZone.w = ir.width  + pad * 2;
+        safeZone.h = ir.height + pad * 2;
+      }
+
+      function build() {
+        rowStrs = [];
+        ctx.font = FS + 'px "Geist Mono", monospace';
+        CW = ctx.measureText('x').width;
+        var cols    = Math.ceil(canvas.width / CW) + 2;
+        var numRows = Math.floor(canvas.height / LH);
+        for (var r = 0; r < numRows; r++) {
+          var src = codeLines[r % codeLines.length] + '   ';
+          var str = '';
+          while (str.length < cols) str += src;
+          rowStrs.push(str);
         }
-        rows2d.push(row);
       }
-    }
 
-    function resize() {
-      canvas.width  = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-      build();
-      updateSafeZone();
-    }
-
-    function applyPhysics(p) {
-      var dx = p.x - mouseX, dy = p.y - mouseY;
-      var d2 = dx * dx + dy * dy;
-      if (d2 < R * R && d2 > 0.01) {
-        var d = Math.sqrt(d2);
-        var f = (R - d) / R * K;
-        p.vx += dx / d * f;
-        p.vy += dy / d * f;
+      function resize() {
+        canvas.width  = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        build();
+        updateSafeZone();
       }
-      p.vx += (p.bx - p.x) * SP;
-      p.vy += (p.by - p.y) * SP;
-      p.vx *= DM;
-      p.vy *= DM;
-      p.x += p.vx;
-      p.y += p.vy;
-    }
 
-    function tick() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font      = FS + 'px "Geist Mono", monospace';
-      ctx.fillStyle = 'rgba(77,77,77,0.22)';
+      function tick(ts) {
+        if (!lastTs) lastTs = ts;
+        var dt = Math.min((ts - lastTs) / 1000, 0.1);
+        lastTs = ts;
+        offset += speed * dt;
 
-      var sz = safeZone;
-      for (var ri = 0; ri < rows2d.length; ri++) {
-        var row = rows2d[ri];
-        var by  = row[0].by;
-        var rowInSafe = by > sz.y && by < sz.y + sz.h;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font      = FS + 'px "Geist Mono", monospace';
+        ctx.fillStyle = 'rgba(77,77,77,0.22)';
 
-        if (!rowInSafe) {
-          var moved = false;
-          for (var ci = 0; ci < row.length; ci++) {
-            applyPhysics(row[ci]);
-            if (Math.abs(row[ci].x - row[ci].bx) > 0.3 || Math.abs(row[ci].y - row[ci].by) > 0.3) moved = true;
-          }
-          if (!moved) {
-            ctx.fillText(rowStrs[ri], 0, by);
+        var sz   = safeZone;
+        var strW = rowStrs[0] ? rowStrs[0].length * CW : canvas.width;
+
+        for (var ri = 0; ri < rowStrs.length; ri++) {
+          var by = ri * LH + LH;
+          // чётные строки — влево, нечётные — вправо
+          var x = (ri % 2 === 0) ? -(offset % strW) : (offset % strW) - strW;
+          var rowInSafe = by > sz.y && by < sz.y + sz.h;
+
+          if (!rowInSafe) {
+            ctx.fillText(rowStrs[ri], x,        by);
+            ctx.fillText(rowStrs[ri], x + strW, by);
           } else {
-            for (var ci2 = 0; ci2 < row.length; ci2++) {
-              ctx.fillText(row[ci2].ch, row[ci2].x, row[ci2].y);
+            // рисуем только вне зоны заголовка
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(0,          by - LH, sz.x,                              LH + 4);
+            ctx.rect(sz.x + sz.w, by - LH, canvas.width - sz.x - sz.w, LH + 4);
+            ctx.clip();
+            ctx.fillText(rowStrs[ri], x,        by);
+            ctx.fillText(rowStrs[ri], x + strW, by);
+            ctx.restore();
+          }
+        }
+
+        requestAnimationFrame(tick);
+      }
+
+      window.addEventListener('resize', resize);
+      document.fonts.ready.then(function() {
+        resize();
+        requestAnimationFrame(tick);
+      });
+
+    } else {
+      // ── отталкивание от курсора (десктоп) ──
+      var FS = 11, LH = 20;
+      var CW, rows2d = [], rowStrs = [];
+      var mouseX = -9999, mouseY = -9999;
+      var R = 60, K = 5.5, SP = 0.07, DM = 0.70;
+      var safeZone = { x: 0, y: 0, w: 0, h: 0 };
+
+      function updateSafeZone() {
+        var cr = canvas.getBoundingClientRect();
+        var ir = hero.querySelector('.hero-inner').getBoundingClientRect();
+        var pad = 80;
+        safeZone.x = ir.left - cr.left - pad;
+        safeZone.y = ir.top  - cr.top  - pad;
+        safeZone.w = ir.width  + pad * 2;
+        safeZone.h = ir.height + pad * 2;
+      }
+
+      function build() {
+        rows2d = []; rowStrs = [];
+        ctx.font = FS + 'px "Geist Mono", monospace';
+        CW = ctx.measureText('x').width;
+        var cols = Math.ceil(canvas.width / CW) + 2;
+        var numRows = Math.floor(canvas.height / LH);
+        for (var r = 0; r < numRows; r++) {
+          var src = codeLines[r % codeLines.length] + '   ';
+          var str = '';
+          while (str.length < cols) str += src;
+          str = str.slice(0, cols);
+          rowStrs.push(str);
+          var row = [];
+          for (var c = 0; c < cols; c++) {
+            row.push({ ch: str[c], bx: c * CW, by: r * LH + LH, x: c * CW, y: r * LH + LH, vx: 0, vy: 0 });
+          }
+          rows2d.push(row);
+        }
+      }
+
+      function resize() {
+        canvas.width  = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        build();
+        updateSafeZone();
+      }
+
+      function applyPhysics(p) {
+        var dx = p.x - mouseX, dy = p.y - mouseY;
+        var d2 = dx * dx + dy * dy;
+        if (d2 < R * R && d2 > 0.01) {
+          var d = Math.sqrt(d2);
+          var f = (R - d) / R * K;
+          p.vx += dx / d * f;
+          p.vy += dy / d * f;
+        }
+        p.vx += (p.bx - p.x) * SP;
+        p.vy += (p.by - p.y) * SP;
+        p.vx *= DM;
+        p.vy *= DM;
+        p.x += p.vx;
+        p.y += p.vy;
+      }
+
+      function tick() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font      = FS + 'px "Geist Mono", monospace';
+        ctx.fillStyle = 'rgba(77,77,77,0.22)';
+
+        var sz = safeZone;
+        for (var ri = 0; ri < rows2d.length; ri++) {
+          var row = rows2d[ri];
+          var by  = row[0].by;
+          var rowInSafe = by > sz.y && by < sz.y + sz.h;
+
+          if (!rowInSafe) {
+            var moved = false;
+            for (var ci = 0; ci < row.length; ci++) {
+              applyPhysics(row[ci]);
+              if (Math.abs(row[ci].x - row[ci].bx) > 0.3 || Math.abs(row[ci].y - row[ci].by) > 0.3) moved = true;
+            }
+            if (!moved) {
+              ctx.fillText(rowStrs[ri], 0, by);
+            } else {
+              for (var ci2 = 0; ci2 < row.length; ci2++) {
+                ctx.fillText(row[ci2].ch, row[ci2].x, row[ci2].y);
+              }
+            }
+          } else {
+            for (var ci = 0; ci < row.length; ci++) {
+              var p = row[ci];
+              if (p.bx >= sz.x && p.bx <= sz.x + sz.w) continue;
+              applyPhysics(p);
+              ctx.fillText(p.ch, p.x, p.y);
             }
           }
-        } else {
-          for (var ci = 0; ci < row.length; ci++) {
-            var p = row[ci];
-            if (p.bx >= sz.x && p.bx <= sz.x + sz.w) continue;
-            applyPhysics(p);
-            ctx.fillText(p.ch, p.x, p.y);
-          }
         }
+        requestAnimationFrame(tick);
       }
-      requestAnimationFrame(tick);
+
+      hero.addEventListener('mousemove', function(e) {
+        var r = canvas.getBoundingClientRect();
+        mouseX = e.clientX - r.left;
+        mouseY = e.clientY - r.top;
+      });
+      hero.addEventListener('mouseleave', function() { mouseX = mouseY = -9999; });
+
+      document.fonts.ready.then(function() {
+        resize();
+        requestAnimationFrame(tick);
+      });
+      window.addEventListener('resize', resize);
     }
-
-    hero.addEventListener('mousemove', function(e) {
-      var r = canvas.getBoundingClientRect();
-      mouseX = e.clientX - r.left;
-      mouseY = e.clientY - r.top;
-    });
-    hero.addEventListener('mouseleave', function() { mouseX = mouseY = -9999; });
-
-    document.fonts.ready.then(function() {
-      resize();
-      requestAnimationFrame(tick);
-    });
-    window.addEventListener('resize', resize);
   })();
 
   </script>
