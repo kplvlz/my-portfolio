@@ -748,10 +748,29 @@
           <span class="stage-title">название этапа</span>
         </div>
         <p class="stage-desc">описание этапа — что было сделано, какие решения приняты и почему.</p>
-        <div class="stage-screens">
-          <div class="screen-placeholder"><img src="../images/oh-keramika/04-01.png" alt=""></div>
-          <div class="screen-placeholder"><img src="../images/oh-keramika/04-02.png" alt=""></div>
-          <div class="screen-placeholder"><img src="../images/oh-keramika/04-03.png" alt=""></div>
+        <div class="slider-wrap">
+          <div class="slider-viewport">
+            <div class="slider-track">
+              <div class="screen-placeholder"><img src="../images/oh-keramika/04-01.png" alt=""></div>
+              <div class="screen-placeholder"><img src="../images/oh-keramika/04-02.png" alt=""></div>
+              <div class="screen-placeholder"><img src="../images/oh-keramika/04-03.png" alt=""></div>
+              <div class="screen-placeholder"><img src="../images/oh-keramika/04-04.png" alt=""></div>
+              <div class="screen-placeholder"><img src="../images/oh-keramika/04-05.png" alt=""></div>
+              <div class="screen-placeholder"><img src="../images/oh-keramika/04-06.png" alt=""></div>
+              <div class="screen-placeholder"><img src="../images/oh-keramika/04-07.png" alt=""></div>
+              <div class="screen-placeholder"><img src="../images/oh-keramika/04-08.png" alt=""></div>
+              <div class="screen-placeholder"><img src="../images/oh-keramika/04-09.png" alt=""></div>
+              <div class="screen-placeholder"><img src="../images/oh-keramika/04-10.png" alt=""></div>
+              <div class="screen-placeholder"><img src="../images/oh-keramika/04-11.png" alt=""></div>
+              <div class="screen-placeholder"><img src="../images/oh-keramika/04-12.png" alt=""></div>
+              <div class="screen-placeholder"><img src="../images/oh-keramika/04-13.png" alt=""></div>
+              <div class="screen-placeholder"><img src="../images/oh-keramika/04-14.png" alt=""></div>
+            </div>
+          </div>
+          <div class="slider-controls">
+            <button class="slider-arrow slider-prev" aria-label="назад" disabled>←</button>
+            <button class="slider-arrow slider-next" aria-label="вперёд">→</button>
+          </div>
         </div>
       </div>
     </div>
@@ -912,9 +931,10 @@
       window.addEventListener('resize', function() { setWidths(); update(); });
     }
 
-    // инициализация слайдера этапа 03
-    var stage3Wrap = document.querySelector('.slider-wrap');
-    if (stage3Wrap) initSlider(stage3Wrap);
+    // инициализация всех слайдеров на странице
+    document.querySelectorAll('.slider-wrap').forEach(function(wrap) {
+      initSlider(wrap);
+    });
 
     // мобильный: конвертировать .stage-screens в слайдеры
     if (window.innerWidth <= 768) {
