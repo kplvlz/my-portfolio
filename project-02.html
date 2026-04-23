@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>юность — лиза макарова</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/project.css">
+</head>
+<body>
+
+  <!-- ── header ── -->
+  <header>
+    <div class="container">
+      <a href="index.html" class="logo">mkrvliz</a>
+      <nav>
+        <a href="index.html#about">обо мне</a>
+        <a href="index.html#portfolio">портфолио</a>
+        <a href="index.html#services">услуги</a>
+        <a href="index.html#contacts">контакты</a>
+      </nav>
+      <button class="burger" id="burger-btn" aria-label="открыть меню" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ── mobile menu ── -->
+  <div class="mobile-menu" id="mobile-menu">
+    <nav class="mobile-nav">
+      <a href="index.html#about">обо мне</a>
+      <a href="index.html#portfolio">портфолио</a>
+      <a href="index.html#services">услуги</a>
+      <a href="index.html#contacts">контакты</a>
+    </nav>
+  </div>
+
+  <main>
+
+    <!-- ── hero ── -->
+    <section id="project-hero">
+      <div class="container">
+        <a href="index.html#portfolio" class="back-link">
+          <span class="back-arrow">←</span> портфолио
+        </a>
+        <div class="project-header-content">
+          <h1 class="project-title">Юность</h1>
+          <div class="project-meta">
+            <div class="project-meta-item">
+              <span class="meta-label">тип работы</span>
+              <span class="meta-value">дизайн и разработка лендинга</span>
+            </div>
+            <div class="project-meta-item">
+              <span class="meta-label">инструмент</span>
+              <span class="meta-value">Figma, Tilda</span>
+            </div>
+            <div class="project-meta-item">
+              <span class="meta-label">год</span>
+              <span class="meta-value">2026</span>
+            </div>
+          </div>
+          <div class="project-links">
+            <a href="https://yunostudio.tilda.ws/" class="project-link-btn" target="_blank" rel="noopener">смотреть сайт</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── о проекте ── -->
+    <section id="project-about">
+      <div class="container">
+        <h2 class="section-heading">о проекте</h2>
+        <div class="about-text">
+          <p>юность — винтажная фотостудия в красноярске.</p>
+          <p>задача: разработать дизайн и собрать лендинг на Tilda. цель — привести пользователя к бронированию зала через систему броней, которая уже была у клиента.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── этапы ── -->
+
+    <div class="stage">
+      <div class="container">
+        <div class="stage-header">
+          <span class="stage-index">этап 01</span>
+          <span class="stage-title">прототипирование</span>
+        </div>
+        <p class="stage-desc">клиент пришёл со своими референсами — задачи на подбор не было. была чёткая структура, которую он хотел видеть, поэтому структуру составляла на основании того, что дал клиент.</p>
+        <div class="stage-screens">
+          <div class="screen-placeholder"></div>
+          <div class="screen-placeholder"></div>
+          <div class="screen-placeholder"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="container">
+        <div class="stage-header">
+          <span class="stage-index">этап 02</span>
+          <span class="stage-title">дизайн</span>
+        </div>
+        <p class="stage-desc">задача на дизайн была размытой: «совместить винтаж и современность, чтобы не выглядеть средневеково». разработала дизайн для десктопа (1200px), адаптив для мобилки делала уже на тильде.</p>
+        <div class="slider-wrap">
+          <div class="slider-viewport">
+            <div class="slider-track">
+              <div class="screen-placeholder"></div>
+              <div class="screen-placeholder"></div>
+              <div class="screen-placeholder"></div>
+              <div class="screen-placeholder"></div>
+              <div class="screen-placeholder"></div>
+            </div>
+          </div>
+          <div class="slider-controls">
+            <button class="slider-arrow slider-prev" aria-label="назад" disabled>←</button>
+            <button class="slider-arrow slider-next" aria-label="вперёд">→</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="container">
+        <div class="stage-header">
+          <span class="stage-index">этап 03</span>
+          <span class="stage-title">перенос на tilda</span>
+        </div>
+        <p class="stage-desc">перенесла макет на Tilda, настроила функционал и анимации. посмотреть работу сайта и анимации можно <a href="https://yunostudio.tilda.ws/" target="_blank" rel="noopener" style="text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; color: inherit;">тут</a> — на сайте много интерактивных элементов, советую проводить мышкой по всему, что видите. также добавила элементы кода: плавный скролл, кастомный курсор и прелоадер с процентной загрузкой.</p>
+        <div class="slider-wrap">
+          <div class="slider-viewport">
+            <div class="slider-track">
+              <div class="screen-placeholder"></div>
+              <div class="screen-placeholder"></div>
+              <div class="screen-placeholder"></div>
+              <div class="screen-placeholder"></div>
+              <div class="screen-placeholder"></div>
+            </div>
+          </div>
+          <div class="slider-controls">
+            <button class="slider-arrow slider-prev" aria-label="назад" disabled>←</button>
+            <button class="slider-arrow slider-next" aria-label="вперёд">→</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── lightbox ── -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightbox-close" aria-label="закрыть">✕</button>
+    <button class="lightbox-prev" id="lightbox-prev" aria-label="предыдущее">←</button>
+    <img id="lightbox-img" src="" alt="">
+    <button class="lightbox-next" id="lightbox-next" aria-label="следующее">→</button>
+  </div>
+  <div class="lightbox-magnifier" id="lightbox-magnifier"></div>
+
+  <!-- ── footer ── -->
+  <footer>
+    <div class="container">
+      <p>© 2026 лиза макарова</p>
+      <p>все права защищены</p>
+    </div>
+  </footer>
+
+  <script src="js/common.js"></script>
+  <script src="js/project.js"></script>
+</body>
+</html>
